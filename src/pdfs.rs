@@ -20,7 +20,11 @@ Adaption for Python by David-Leon Pohl, pohl@physik.uni-bonn.de
 Adaption for Rust by Pascal Wolf, wolf@physik.uni-bonn.de
 */
 
-/// Constants used in definition of Landau PDF
+// Rust thinks the constants as well as pub functions in this crate are unused for some reason
+// Maybe related to https://github.com/rust-lang/rust/issues/47133
+#![allow(dead_code)]  // Cheeky-breeky trick the linter 
+
+// Constants used in definition of the PDFs
 const INV_SQRT_2_PI: f64 = 0.3989422804014;   // (2 pi)^(-1/2)
 const P1: [f64; 5] = [0.4259894875, -0.1249762550, 0.03984243700, -0.006298287635, 0.001511162253];
 const Q1: [f64; 5] = [1.0, -0.3388260629, 0.09594393323, -0.01608042283, 0.003778942063];
@@ -48,8 +52,8 @@ pub fn landau_pdf(x: f64, x0: f64, xi: f64) -> f64 {
     // Quantifier deciding the branch we go in
     let v = (x -x0) / xi;
 
-    // Variables to mutate
-    let (mut u, mut ue, mut us, mut denlan): (f64, f64, f64, f64);
+    // Variables to be set
+    let (u, ue, us, denlan): (f64, f64, f64, f64);
 
     if v < -5.5 {
         u = std::f64::consts::E.powf(v + 1.0);
@@ -112,16 +116,17 @@ pub fn langau_pdf(x: f64, mu: f64, eta: f64, sigma: f64) -> f64 {
 	let mpc = mu - mpshift;  // * eta;
 
     // Variables for putting in results
-    let (mut xx, mut sum): (f64, f64) = (0.0, 0.0);
-
-    let conv_bounds = [x_low, x_upp];
+    let (mut xx, mut bound, mut sum): (f64, f64, f64);
+    
+    sum = 0.0;
 
     // Discrete linear convolution of Landau and Gaussian
     for i in 1..=(n_steps / 2) {
-        for bound in conv_bounds.iter() {
-            xx = bound + (i as f64 - 0.5) * step;
-            sum += landau_pdf(xx, mpc, eta) / eta * gauss_pdf(x, xx, sigma);
-        }
+        bound = (i as f64 - 0.5) * step;
+        xx = x_low + bound;
+        sum += landau_pdf(xx, mpc, eta) / eta * gauss_pdf(x, xx, sigma);
+        xx = x_upp - bound;
+        sum += landau_pdf(xx, mpc, eta) / eta * gauss_pdf(x, xx, sigma);
     }
     
     // FIXME: Unsused in original implementation
