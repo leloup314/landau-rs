@@ -3,10 +3,11 @@ Rust port of [pylandau](https://github.com/SiLab-Bonn/pylandau), a simple [Landa
 
 ## Installation
 Add stuff to your `Cargo.toml` once I am done
-```
+
 ## Usage
 
-```Rust
+```rust
 use landau-rs::prelude::*;
 // Do stuff with it
+
 ```
