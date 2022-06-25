@@ -22,7 +22,10 @@ Adaption for Rust by Pascal Wolf, wolf@physik.uni-bonn.de
 
 // Rust thinks the constants as well as pub functions in this crate are unused for some reason
 // Maybe related to https://github.com/rust-lang/rust/issues/47133
-#![allow(dead_code)]  // Cheeky-breeky trick the linter 
+#![allow(dead_code)]  // Cheeky-breeky trick the linter
+
+// Euler
+use std::f64::consts::E;
 
 // Constants used in definition of the PDFs
 const INV_SQRT_2_PI: f64 = 0.3989422804014;   // (2 pi)^(-1/2)
@@ -56,16 +59,16 @@ pub fn landau_pdf(x: f64, x0: f64, xi: f64) -> f64 {
     let (u, ue, us, denlan): (f64, f64, f64, f64);
 
     if v < -5.5 {
-        u = std::f64::consts::E.powf(v + 1.0);
+        u = E.powf(v + 1.0);
         if u < 1e-10 {
             return 0.0;
         }
-        ue = std::f64::consts::E.powf(-1.0 / u);
+        ue = E.powf(-1.0 / u);
         us = u.sqrt();
         denlan = INV_SQRT_2_PI * (ue / us) * (1.0 + (A1[0] + (A1[1] + A1[2] * u)* u) *u);
     } else if  v < -1.0 {
-        u = std::f64::consts::E.powf(-v -1.0);
-        denlan = std::f64::consts::E.powf(-u) * u.sqrt() * (P1[0] + (P1[1] + (P1[2] + (P1[3] + P1[4] * v) *v) *v) *v) / (Q1[0] + (Q1[1] + (Q1[2] + (Q1[3] + Q1[4] * v) *v) *v) *v);
+        u = E.powf(-v -1.0);
+        denlan = E.powf(-u) * u.sqrt() * (P1[0] + (P1[1] + (P1[2] + (P1[3] + P1[4] * v) *v) *v) *v) / (Q1[0] + (Q1[1] + (Q1[2] + (Q1[3] + Q1[4] * v) *v) *v) *v);
     } else if v < 1.0 {
         denlan = (P2[0] + (P2[1] + (P2[2] + (P2[3] + P2[4] * v) * v) * v) * v) / (Q2[0] + (Q2[1] + (Q2[2] + (Q2[3] + Q2[4] * v) * v) * v) * v);
     } else if v < 5.0 {
@@ -89,7 +92,7 @@ pub fn landau_pdf(x: f64, x0: f64, xi: f64) -> f64 {
 
 /// Gaussian PDF
 pub fn gauss_pdf(x: f64, mu: f64, sigma: f64) -> f64 {
-    INV_SQRT_2_PI / sigma * std::f64::consts::E.powf(-0.5 * (x - mu).powf(2.0) / sigma.powf(2.0))
+    INV_SQRT_2_PI / sigma * E.powf(-0.5 * (x - mu).powf(2.0) / sigma.powf(2.0))
 }
 
 /// Convolution of Landau and Gaussian PDF
