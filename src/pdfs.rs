@@ -110,13 +110,13 @@ pub fn langau_pdf(x: f64, mu: f64, eta: f64, sigma: f64) -> f64 {
     }
 
     // Range of convolution integral
-	let x_low = x - sigma_env as f64 * sigma;
-	let x_upp = x + sigma_env as f64 * sigma;
+    let x_low = x - sigma_env as f64 * sigma;
+    let x_upp = x + sigma_env as f64 * sigma;
     let step = (x_upp - x_low) / n_steps as f64;
 
     // MP shift correction FIXME: This does nothing
     let mpshift: f64 = 0.0;  // -0.22278298;     // Landau maximum location shift in original code is wrong, since the shift does not depend on mu only
-	let mpc = mu - mpshift;  // * eta;
+    let mpc = mu - mpshift;  // * eta;
 
     // Variables for putting in results
     let (mut xx, mut bound, mut sum): (f64, f64, f64);
